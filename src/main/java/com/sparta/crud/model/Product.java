@@ -1,10 +1,11 @@
 package com.sparta.crud.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Getter
 @Entity
 @Table(name = "products")
 public class Product {

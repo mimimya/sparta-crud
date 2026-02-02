@@ -2,9 +2,11 @@ package com.sparta.crud.model;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "orders")
 public class Order {
