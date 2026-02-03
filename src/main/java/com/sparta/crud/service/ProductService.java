@@ -37,9 +37,14 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    // 상품 목록 조회
+    // 상품 목록 조회 (삭제 포함)
     public List<ProductResponseDto> getProducts() {
         return productRepository.findAll().stream().map(ProductResponseDto::new).toList();
+    }
+
+    // 상품 목록 조회 (판매중/품절)
+    public List<ProductResponseDto> getProductsNotDisabled() {
+        return productRepository.findAllByStatusNot("DISABLED").stream().map(ProductResponseDto::new).toList();
     }
 
     // 상품 수정
@@ -51,6 +56,17 @@ public class ProductService {
         product.setPrice(requestDto.getPrice());
         product.setStock(requestDto.getStock());
         product.setStatus(requestDto.getStatusOrDefault()); // ACTIVE / DISABLED ...
+        product.setUpdatedAt(LocalDateTime.now());
+
+        return new ProductResponseDto(product);
+    }
+
+    // 상품 삭제
+    @Transactional
+    public ProductResponseDto softDeleteProduct(Long productId) {
+        Product product = this.findProduct(productId);
+
+        product.setStatus("DELETE");
         product.setUpdatedAt(LocalDateTime.now());
 
         return new ProductResponseDto(product);

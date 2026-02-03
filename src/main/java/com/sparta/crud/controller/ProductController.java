@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping
     public List<ProductResponseDto> getProducts() {
-        return productService.getProducts();
+        return productService.getProductsNotDisabled();
     }
 
     // 상품 수정 / 상태 변경
@@ -37,7 +37,7 @@ public class ProductController {
 
     // 상품 삭제
     @DeleteMapping("/{productId}")
-    public boolean deleteProduct(@PathVariable Long productId) {
-        return productService.deleteProduct(productId);
+    public ProductResponseDto deleteProduct(@PathVariable Long productId) {
+        return productService.softDeleteProduct(productId);
     }
 }
