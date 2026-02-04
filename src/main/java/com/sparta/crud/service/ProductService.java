@@ -6,7 +6,6 @@ import com.sparta.crud.model.Product;
 import com.sparta.crud.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -63,24 +62,11 @@ public class ProductService {
 
     // 상품 삭제
     @Transactional
-    public ProductResponseDto softDeleteProduct(Long productId) {
+    public void softDeleteProduct(Long productId) {
         Product product = this.findProduct(productId);
 
         product.setStatus("DELETE");
         product.setUpdatedAt(LocalDateTime.now());
-
-        return new ProductResponseDto(product);
-    }
-
-    // 상품 DB에서 삭제
-    public boolean deleteProduct(Long productId) {
-        try { //??: 클라이언트 오류 전달
-            Product product = findProduct(productId);
-            productRepository.delete(product);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     // TODO: -> ProductQueryService
