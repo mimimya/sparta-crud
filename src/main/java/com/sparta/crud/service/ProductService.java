@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,14 +18,12 @@ public class ProductService {
 
     // 상품 등록
     public ProductResponseDto createProduct(ProductRequestDto requestDto) {
-        Product product = new Product();
-        product.setName(requestDto.getName());
-        product.setPrice(requestDto.getPrice());
-        product.setStock(requestDto.getStock());
-        product.setStatus(requestDto.getStatusOrDefault()); // ACTIVE / DISABLED ...
-        product.setCreatedAt(LocalDateTime.now());
-        product.setUpdatedAt(LocalDateTime.now());
-
+        Product product = Product.create(
+                requestDto.getName(),
+                requestDto.getPrice(),
+                requestDto.getStock(),
+                requestDto.getStatus()
+        );
         return new ProductResponseDto(productRepository.save(product));
     }
 
@@ -50,13 +47,12 @@ public class ProductService {
     @Transactional
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto) {
         Product product = this.findProduct(productId);
-
-        product.setName(requestDto.getName());
-        product.setPrice(requestDto.getPrice());
-        product.setStock(requestDto.getStock());
-        product.setStatus(requestDto.getStatusOrDefault()); // ACTIVE / DISABLED ...
-        product.setUpdatedAt(LocalDateTime.now());
-
+        product.update(
+                requestDto.getName(),
+                requestDto.getPrice(),
+                requestDto.getStock(),
+                requestDto.getStatus()
+        );
         return new ProductResponseDto(product);
     }
 
@@ -64,9 +60,7 @@ public class ProductService {
     @Transactional
     public void softDeleteProduct(Long productId) {
         Product product = this.findProduct(productId);
-
-        product.setStatus("DELETE");
-        product.setUpdatedAt(LocalDateTime.now());
+        product.delete();
     }
 
     // TODO: -> ProductQueryService

@@ -9,7 +9,4 @@ public class ProductRequestDto {
     private int stock;
     private String status;
 
-    public String getStatusOrDefault() {
-        return (status == null || status.isBlank()) ? "ACTIVE" : status;
-    }
 }

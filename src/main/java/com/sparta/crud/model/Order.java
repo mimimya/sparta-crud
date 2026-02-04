@@ -2,15 +2,16 @@ package com.sparta.crud.model;
 
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
 @Entity
 @Table(name = "orders")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +25,26 @@ public class Order {
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
+    private Order(Product product, int quantity) {
+        validate(quantity);
+        this.product = product;
+        this.quantity = quantity;
+        this.price = product.getPrice() * quantity;
+        this.status = "CREATED";
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public static Order create(Product product, int quantity) {
+        product.decreaseStockByOrder(quantity);
+        return new Order(product, quantity);
+    }
+
+    private void validate(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("주문 수량은 1개 이상이어야 합니다.");
+        }
+    }
 }
