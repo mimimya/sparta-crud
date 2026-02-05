@@ -1,7 +1,6 @@
 package com.sparta.crud.model;
 
 import com.sparta.crud.exception.order.OrderQuantityExceedsStockException;
-import com.sparta.crud.exception.order.OrderQuantityInvalidException;
 import com.sparta.crud.exception.product.ProductPriceInvalidException;
 import com.sparta.crud.exception.product.ProductStockInvalidException;
 import jakarta.persistence.*;

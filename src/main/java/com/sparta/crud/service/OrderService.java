@@ -21,7 +21,7 @@ public class OrderService {
     // 주문 생성
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(() -> new ProductNotFoundException());
+        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(ProductNotFoundException::new);
 
         Order order = Order.create(product, requestDto.getQuantity());
         orderRepository.save(order);
@@ -31,7 +31,7 @@ public class OrderService {
 
     // 주문 조회
     public OrderResponseDto getOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         return new OrderResponseDto(order);
     }
 

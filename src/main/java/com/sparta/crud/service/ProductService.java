@@ -66,6 +66,6 @@ public class ProductService {
 
     // TODO: -> ProductQueryService
     private Product findProduct(Long productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException());
+        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
     }
 }
