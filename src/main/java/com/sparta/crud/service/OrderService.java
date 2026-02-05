@@ -2,6 +2,8 @@ package com.sparta.crud.service;
 
 import com.sparta.crud.dto.order.OrderRequestDto;
 import com.sparta.crud.dto.order.OrderResponseDto;
+import com.sparta.crud.exception.order.OrderNotFoundException;
+import com.sparta.crud.exception.product.ProductNotFoundException;
 import com.sparta.crud.model.Order;
 import com.sparta.crud.model.Product;
 import com.sparta.crud.repository.OrderRepository;
@@ -19,7 +21,7 @@ public class OrderService {
     // 주문 생성
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+        Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(() -> new ProductNotFoundException());
 
         Order order = Order.create(product, requestDto.getQuantity());
         orderRepository.save(order);
@@ -29,7 +31,7 @@ public class OrderService {
 
     // 주문 조회
     public OrderResponseDto getOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다."));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
         return new OrderResponseDto(order);
     }
 

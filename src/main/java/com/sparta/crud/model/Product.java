@@ -1,5 +1,9 @@
 package com.sparta.crud.model;
 
+import com.sparta.crud.exception.order.OrderQuantityExceedsStockException;
+import com.sparta.crud.exception.order.OrderQuantityInvalidException;
+import com.sparta.crud.exception.product.ProductPriceInvalidException;
+import com.sparta.crud.exception.product.ProductStockInvalidException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +37,7 @@ public class Product {
         this.price = price;
         this.stock = stock;
         this.status = status;
+        checkStock();
     }
 
     public static Product create(String name, int price, int stock, String status) {
@@ -49,6 +54,8 @@ public class Product {
         this.stock = stock;
         this.status = resolveStatus(status);
         this.updatedAt = LocalDateTime.now();
+
+        checkStock();
     }
 
     public void delete() {
@@ -58,14 +65,11 @@ public class Product {
 
     public void decreaseStockByOrder(int quantity) {
         if (this.stock < quantity) {
-            throw new IllegalStateException("요청한 수량이 재고를 초과했습니다.");
+            throw new OrderQuantityExceedsStockException();
         }
         this.stock -= quantity;
         this.updatedAt = LocalDateTime.now();
-
-        if (this.stock == 0) {
-            this.status = "NOTINSTOCK";
-        }
+        checkStock();
     }
 
     private static String resolveStatus(String status) {
@@ -74,12 +78,17 @@ public class Product {
 
     private static void validate(int price, int stock) {
         if (price < 0) {
-            throw new IllegalArgumentException("가격은 0원 이상이어야 합니다.");
+            throw new ProductPriceInvalidException();
         }
         if (stock < 0) {
-            throw new IllegalArgumentException("재고는 0개 이상이어야 합니다.");
+            throw new ProductStockInvalidException();
         }
     }
 
+    private void checkStock() {
+        if (this.stock == 0) {
+            this.status = "NOTINSTOCK";
+        }
+    }
 
 }

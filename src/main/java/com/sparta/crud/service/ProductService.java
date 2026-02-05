@@ -2,6 +2,7 @@ package com.sparta.crud.service;
 
 import com.sparta.crud.dto.product.ProductRequestDto;
 import com.sparta.crud.dto.product.ProductResponseDto;
+import com.sparta.crud.exception.product.ProductNotFoundException;
 import com.sparta.crud.model.Product;
 import com.sparta.crud.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -65,6 +66,6 @@ public class ProductService {
 
     // TODO: -> ProductQueryService
     private Product findProduct(Long productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException());
     }
 }

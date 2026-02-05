@@ -1,6 +1,7 @@
 package com.sparta.crud.model;
 
 
+import com.sparta.crud.exception.order.OrderQuantityInvalidException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,7 +45,7 @@ public class Order {
 
     private void validate(int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("주문 수량은 1개 이상이어야 합니다.");
+            throw new OrderQuantityInvalidException();
         }
     }
 }
