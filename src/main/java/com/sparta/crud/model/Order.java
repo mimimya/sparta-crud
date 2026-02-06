@@ -23,7 +23,8 @@ public class Order {
     private Product product;
     private int quantity;
     private int price;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -33,7 +34,7 @@ public class Order {
         this.product = product;
         this.quantity = quantity;
         this.price = product.getPrice() * quantity;
-        this.status = "CREATED";
+        this.status = OrderStatus.PENDING_PAYMENT;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

@@ -1,6 +1,7 @@
 package com.sparta.crud.dto.order;
 
 import com.sparta.crud.model.Order;
+import com.sparta.crud.model.OrderStatus;
 import lombok.Getter;
 
 @Getter
@@ -9,7 +10,7 @@ public class OrderResponseDto {
     private String productName;
     private int quantity;
     private int totalPrice;
-    private String status;
+    private OrderStatus status;
 
     public OrderResponseDto(Order order) {
         this.orderId = order.getId();
