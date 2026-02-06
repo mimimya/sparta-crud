@@ -1,6 +1,7 @@
 package com.sparta.crud.dto.product;
 
 import com.sparta.crud.model.Product;
+import com.sparta.crud.model.ProductStatus;
 import lombok.Getter;
 
 @Getter
@@ -9,7 +10,7 @@ public class ProductResponseDto {
     private String name;
     private int price;
     private int stock;
-    private String status;
+    private ProductStatus status;
 
     public ProductResponseDto(Product product) {
         this.id = product.getId();

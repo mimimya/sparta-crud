@@ -4,6 +4,7 @@ import com.sparta.crud.dto.product.ProductRequestDto;
 import com.sparta.crud.dto.product.ProductResponseDto;
 import com.sparta.crud.exception.product.ProductNotFoundException;
 import com.sparta.crud.model.Product;
+import com.sparta.crud.model.ProductStatus;
 import com.sparta.crud.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class ProductService {
 
     // 상품 목록 조회 (판매중/품절)
     public List<ProductResponseDto> getProductsNotDisabled() {
-        return productRepository.findAllByStatusNot("DISABLED").stream().map(ProductResponseDto::new).toList();
+        return productRepository.findAllByStatusNot(ProductStatus.DELETED).stream().map(ProductResponseDto::new).toList();
     }
 
     // 상품 수정

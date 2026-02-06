@@ -23,14 +23,15 @@ public class Product {
     private String name;
     private int price; // 제품 현재 판매 가격
     private int stock;
-    private String status; // TODO: Enum으르 변경
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "product")
     private List<Order> orders;
 
-    public Product(String name, int price, int stock, String status) {
+    public Product(String name, int price, int stock, ProductStatus status) {
         validate(price, stock);
         this.name = name;
         this.price = price;
@@ -39,13 +40,13 @@ public class Product {
         checkStock();
     }
 
-    public static Product create(String name, int price, int stock, String status) {
+    public static Product create(String name, int price, int stock, ProductStatus status) {
         Product createdPproduct = new Product(name, price, stock, resolveStatus(status));
         createdPproduct.createdAt = LocalDateTime.now();
         return createdPproduct;
     }
 
-    public void update(String name, int price, int stock, String status) {
+    public void update(String name, int price, int stock, ProductStatus status) {
         validate(price, stock);
 
         this.name = name;
@@ -58,7 +59,7 @@ public class Product {
     }
 
     public void delete() {
-        this.status = "DELETED";
+        this.status = this.status.delete();
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -71,8 +72,11 @@ public class Product {
         checkStock();
     }
 
-    private static String resolveStatus(String status) {
-        return (status == null || status.isBlank()) ? "ACTIVE" : status;
+    /**
+     * DTO에서 null 값으로 들어온 상태를 처리
+     */
+    private static ProductStatus resolveStatus(ProductStatus status) {
+        return status == null ? ProductStatus.ON_SALE : status;
     }
 
     private static void validate(int price, int stock) {
@@ -86,7 +90,9 @@ public class Product {
 
     private void checkStock() {
         if (this.stock == 0) {
-            this.status = "NOTINSTOCK";
+            this.status = this.status.soldOut();
+        } else {
+            this.status = this.status.restore();
         }
     }
 
