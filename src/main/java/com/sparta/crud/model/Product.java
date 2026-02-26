@@ -37,7 +37,6 @@ public class Product {
         this.price = price;
         this.stock = stock;
         this.status = status;
-        checkStock();
     }
 
     public static Product create(String name, int price, int stock, ProductStatus status) {
