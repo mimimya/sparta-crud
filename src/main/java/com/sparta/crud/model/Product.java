@@ -90,7 +90,7 @@ public class Product {
     private void checkStock() {
         if (this.stock == 0) {
             this.status = this.status.soldOut();
-        } else {
+        } else if(this.status == ProductStatus.SOLD_OUT){
             this.status = this.status.restore();
         }
     }
