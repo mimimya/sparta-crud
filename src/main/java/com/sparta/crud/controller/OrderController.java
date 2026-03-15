@@ -4,6 +4,7 @@ import com.sparta.crud.dto.order.OrderRequestDto;
 import com.sparta.crud.dto.order.OrderResponseDto;
 import com.sparta.crud.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,15 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long orderId) {
         OrderResponseDto dto = orderService.getOrder(orderId);
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<OrderResponseDto>> getOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<OrderResponseDto> dtos = orderService.getOrders(page, size);
+        return ResponseEntity.ok(dtos);
     }
 
 }

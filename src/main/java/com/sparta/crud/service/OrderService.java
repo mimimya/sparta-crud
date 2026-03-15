@@ -9,6 +9,10 @@ import com.sparta.crud.model.Product;
 import com.sparta.crud.repository.OrderRepository;
 import com.sparta.crud.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +39,16 @@ public class OrderService {
         return new OrderResponseDto(order);
     }
 
-    // TODO: 주문 목록 조회 (페이지네이션)
+    // 주문 목록 조회 (페이지네이션)
+    @Transactional(readOnly = true) // 읽기 전용 트랜잭션 (성능 최적화)
+    public Page<OrderResponseDto> getOrders(int page, int size) {
+        // page는 0부터 시작하므로 그대로 사용하거나, 클라이언트가 1부터 보낸다면 -1 처리 필요
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+
+        // Page 내부의 Order 엔티티들을 DTO로 변환
+        return orderPage.map(OrderResponseDto::new);
+    }
     // TODO: 주문 취소
 }
