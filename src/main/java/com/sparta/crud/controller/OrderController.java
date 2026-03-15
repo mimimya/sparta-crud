@@ -2,7 +2,7 @@ package com.sparta.crud.controller;
 
 import com.sparta.crud.dto.order.OrderRequestDto;
 import com.sparta.crud.dto.order.OrderResponseDto;
-import com.sparta.crud.service.OrderService;
+import com.sparta.crud.facade.RedissonLockOrderFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final OrderService orderService;
+    // private final OrderService orderService; // 기존 코드 주석 처리
+    private final RedissonLockOrderFacade orderFacade; // Facade 주입
 
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto requestDto) {
-        OrderResponseDto dto = orderService.createOrder(requestDto);
+        OrderResponseDto dto = orderFacade.createOrder(requestDto);
         return ResponseEntity
                 .created(URI.create("/orders/" + dto.getOrderId()))
                 .body(dto);
@@ -26,7 +27,7 @@ public class OrderController {
 
     @GetMapping("{orderId}")
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long orderId) {
-        OrderResponseDto dto = orderService.getOrder(orderId);
+        OrderResponseDto dto = orderFacade.getOrder(orderId);
         return ResponseEntity.ok(dto);
     }
 
@@ -35,7 +36,7 @@ public class OrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<OrderResponseDto> dtos = orderService.getOrders(page, size);
+        Page<OrderResponseDto> dtos = orderFacade.getOrders(page, size);
         return ResponseEntity.ok(dtos);
     }
 
