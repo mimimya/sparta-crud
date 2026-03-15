@@ -34,6 +34,7 @@ public class OrderService {
     }
 
     // 주문 조회
+    @Transactional(readOnly = true)
     public OrderResponseDto getOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         return new OrderResponseDto(order);
